@@ -6,67 +6,53 @@ namespace BinarySearchTree
 {
     public class Node
     {
-        public char Data { get; set; }
-        public Node Left { get; set; }
-        public Node Right { get; set; }
-        public Node Equal { get; set; }
+		public Node L1 { get; set; }
+        public Node R1 { get; set; }
+        public Node Same { get; set; }
+
 
         public bool End;
+		public char Data { get; set; }
         public Node(char data)
         {
             Data = data;
         }
 
-        public Node(char data, Node left, Node right, Node equal, bool end)
+        public Node(char data, Node L1, Node R1, Node Same, bool end)
         {
             Data = data;
-            Left = left;
-            Right = right;
-            Equal = equal;
+            L1 = L1;
+            R1 = R1;
+            Same = Same;
             End = end;
         }
 
-        public void Add(string prefix)
+        public void Add(string pr)
         {
-            Node current = this;
-            int comparer;
-            for (int i = 0; i < prefix.Length; i++)
+			int keyC;
+            Node nodeC = this;
+            for (int i = 0; i < pr.Length; i++)
             {
-                comparer = prefix[i].CompareTo(current.Data);
-                if (comparer == 0)
-                {
-                    if (i == prefix.Length - 1)
-                    {
-                        current.End = true;
-                        return;
-                    }
-
-                    if (current.Equal == null)
-                        current.Equal = new Node(prefix[i + 1]);
-                    current = current.Equal;
+                keyC = pr[i].CompareTo(nodeC.Data);
+                if (keyC == 0) {
+                    if (i == pr.Length - 1) { nodeC.End = true; return; }
+                    if (nodeC.Same == null) nodeC.Same = new Node(pr[i + 1]);
+                    nodeC = nodeC.Same;
                 }
                 else
                 {
-                    if (comparer < 0)
-                    {
-                        if (current.Left == null)
-                            current.Left = new Node(prefix[i]);
-                        current = current.Left;
+                    if (keyC < 0) {
+                        if (nodeC.L1 == null) nodeC.L1 = new Node(pr[i]);
+                        nodeC = nodeC.L1;
                         i--;
                     }
-                    else
-                    {
-                        if (current.Right == null)
-                            current.Right = new Node(prefix[i]);
-                        current = current.Right;
+                    else {
+                        if (nodeC.R1 == null) nodeC.R1 = new Node(pr[i]);
+                        nodeC = nodeC.R1;
                         i--;
                     }
 
-                    if (i == prefix.Length - 1)
-                    {
-                        current.End = true;
-                        return;
-                    }
+                    if (i == pr.Length - 1) { nodeC.End = true; return; }
                 }
             }
         }

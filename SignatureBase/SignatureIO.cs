@@ -7,18 +7,17 @@ namespace SignatureBase
 {
     public class Signature : IComparable<Signature>
     {
+	public string signature_hash; 
         public string name;
-        public int signature_length; // k символов сигнатуры (n<=k)
-        public string signature_prefix; // n символов сигнатуры, которые хранятся в базе для поиска вхождения
-        public string signature_hash; // SHA256-хэш сигнатуры
-        public int offset_begin; //минимальное смещение первого символа сигнатуры относительно начала
-        public int offset_end; //максимальное смещение от начала файла
+	public int offset_end; 
+        public int signature_length; 
+        public string signature_prefix;
+        public int offset_begin; 
         private Dictionary<string, Signature> signature_dict = new Dictionary<string, Signature>(); //словарь для хранения Ключа-Префикса и Значения-Экземпляра класса
         private Tree tree = new Tree();
         readonly Work_with_data wwd = new Work_with_data();
-        public Signature() { } // конструктор
+        public Signature() { } 
 
-        //конструктор класса по атрибутам
         private Signature(string name, int signature_length, string signature_prefix, string signature_hash, int offset_begin, int offset_end)
         {
             this.name = name;
@@ -29,9 +28,6 @@ namespace SignatureBase
             this.offset_end = offset_end;
 
         }
-
-        //метод класса для разбиения прочитанной строки и создания экземпляра класса
-        // с последующим добавлением этого экземпляра с словарь и сохранением префикса в узле бинарного дерева
         public void LineSplit(string line)
         {
             string[] tmp = line.Split(new char[] { ' ' });
@@ -60,7 +56,7 @@ namespace SignatureBase
             }
         }
 
-        //Использует алгоритм двоичного поиска для нахождения определенного элемента в отсортированном списке
+
         private string Find_prefix(string region)
         {
             string find_signature = "";
@@ -121,15 +117,9 @@ namespace SignatureBase
         }
 
 
-        public int CompareTo(Signature other)                                    //   Этот метод использует Array.Sort, который применяет сортировку гибридности следующим образом:
-        {                                                                        //   Если размер секции меньше 16 элементов или равен ему, он использует алгоритм сортировки вставки.
-            return signature_prefix.CompareTo(other.signature_prefix);           //   Если количество секций превышает 2 log n, где n — диапазон входного массива, используется алгоритм хеапсорт.
-        }                                                                        //   В противном случае используется алгоритм QuickSort.
-
-        ////доп. метод по сравнению элементов для бинарного поиска
-        //public int Compare(Signature x, Signature y)
-        //{
-        //    return x.signature_prefix.CompareTo(y.signature_prefix);
-        //}
+        public int CompareTo(Signature other)                                    
+        {                                                                        
+            return signature_prefix.CompareTo(other.signature_prefix);           
+        }                                                                        
     }
 }

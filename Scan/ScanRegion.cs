@@ -10,12 +10,10 @@ namespace Scan
 {
     public class ScanRegion
     {
-        int segment_size, //Размер сегмента
-            scan_offset_begin; //Смещение относительно начала контента
+        int segment_size, 
+            scan_offset_begin; 
         IObjectContent objectContent;
-        const int BLOCK_SIZE = 8 * 1024; // 1 кбайт
-
-        //IObjectContent IOC = new IObjectContent(); //Объект IObjectContent
+        const int BLOCK_SIZE = 8 * 1024; 
         public ScanRegion() { }
         public ScanRegion(IObjectContent obj, int seg_size, int offset)
         {
@@ -24,11 +22,8 @@ namespace Scan
             scan_offset_begin = offset;
         }
 
-        public bool Block_split() //Метод блочного чтения заданного региона
+        public bool Block_split() 
         {
-            // разбить файл на регионы (делим на BLOCK_SIZE)
-            // создать список регионов, являющихся экземплярами класса ScanRegion
-            // читаем каждый полученный блок и вызываем проверку из SignatureIO
 
             byte[] res = new byte[segment_size];
             objectContent.Block_read(res, scan_offset_begin, segment_size);

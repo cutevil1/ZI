@@ -7,47 +7,45 @@ namespace SignatureBase
 {
     public class Signature : IComparable<Signature>
     {
-	public string signature_hash; 
+	public string hashS; 
         public string name;
-	public int offset_end; 
-        public int signature_length; 
-        public string signature_prefix;
-        public int offset_begin; 
-        private Dictionary<string, Signature> signature_dict = new Dictionary<string, Signature>(); //словарь для хранения Ключа-Префикса и Значения-Экземпляра класса
+		public int lengthS; 
+        public string prefixS;
+        public int begin; 
+		public int end; 
+        private Dictionary<string, Signature> signature_dict = new Dictionary<string, Signature>();
         private Tree tree = new Tree();
         readonly Work_with_data wwd = new Work_with_data();
         public Signature() { } 
 
-        private Signature(string name, int signature_length, string signature_prefix, string signature_hash, int offset_begin, int offset_end)
+        private Signature(string name, int lengthS, string prefixS, string hashS, int begin, int end)
         {
             this.name = name;
-            this.signature_length = signature_length;
-            this.signature_prefix = signature_prefix;
-            this.signature_hash = signature_hash;
-            this.offset_begin = offset_begin;
-            this.offset_end = offset_end;
-
+            this.lengthS = lengthS;
+            this.prefixS = prefixS;
+            this.hashS = hashS;
+            this.begin = begin;
+            this.end = end;
         }
         public void LineSplit(string line)
         {
-            string[] tmp = line.Split(new char[] { ' ' });
+            string[] tt = line.Split(new char[] { ' ' });
             try
             {
-                signature_dict.Add(tmp[2], new Signature
+                signature_dict.Add(tt[2], new Signature
                 {
-                    name = tmp[0],
-                    signature_length = Convert.ToInt16(tmp[1]),
-                    signature_prefix = tmp[2],
-                    signature_hash = tmp[3],
-                    offset_begin = Convert.ToInt16(tmp[4]),
-                    offset_end = Convert.ToInt16(tmp[5])
+                    name = tt[0],
+                    lengthS = Convert.ToInt16(tt[1]),
+                    prefixS = tt[2],
+                    hashS = tt[3],
+                    begin = Convert.ToInt16(tt[4]),
+                    end = Convert.ToInt16(tt[5])
                 });
-                tree.Add(tmp[2]);
+                tree.Add(tt[2]);
             }
             catch (Exception) { }
         }
 
-        //загрузка всех записей из файла в список
         public void Load_all_line_in_base()
         {
             for (int i = 0; i < System.IO.File.ReadAllLines(wwd.path_to_db_file).Length; i++)
@@ -66,60 +64,51 @@ namespace SignatureBase
                 if (current.Data.CompareTo(region[i]) == 0)
                 {
                     find_signature += current.Data;
-                    if (current.End)
-                        return find_signature;
+                    if (current.End) return find_signature;
                     i++;
                     current = current.Equal;
                 }
                 else
                 {
-                    if (region[i] < current.Data)
-                        current = current.Left;
-                    else
-                        if (region[i] > current.Data)
-                        current = current.Right;
+                    if (region[i] < current.Data) current = current.Left;
+                    else if (region[i] > current.Data) current = current.Right;
                 }
-                if (current == null)
-                    break;
+                if (current == null) break;
             }
             return "";
         }
 
-        public bool FindSignature(string tmp)
+        public bool FindSignature(string tt)
         {
-            string buffer = tmp, to_hash_line = "";
-            string wm_str = Find_prefix(tmp);
-            while (wm_str == "" && tmp != "")
+            string buffer = tt, to_hash_line = "";
+            string wm_str = Find_prefix(tt);
+            while (wm_str == "" && tt != "")
             {
-                tmp = tmp.Substring(1);
-                wm_str = Find_prefix(tmp);
+                tt = tt.Substring(1);
+                wm_str = Find_prefix(tt);
             }
-            if (wm_str != "") //добавить сверку хэша найденного фрагмента и сигнатуры
+            if (wm_str != "")
             {
                 if (signature_dict.TryGetValue(wm_str, out var value))
                 {
-                    if (tmp.Length >= value.signature_length)
+                    if (tt.Length >= value.lengthS)
                     {
-                        for (int i = 0; i < value.signature_length; i++)
-                            to_hash_line += tmp[i];
+                        for (int i = 0; i < value.lengthS; i++)
+                            to_hash_line += tt[i];
 
                         Calculating_hash calc_hash = new Calculating_hash();
-                        return calc_hash.Check_hash(to_hash_line, value.signature_hash);
+                        return calc_hash.Check_hash(to_hash_line, value.hashS);
                     }
-                    else
-                        return false;
+                    else return false;
                 }
-                else
-                    return false;
+                else return false;
             }
-            else
-                return false;
+            else return false;
         }
-
 
         public int CompareTo(Signature other)                                    
         {                                                                        
-            return signature_prefix.CompareTo(other.signature_prefix);           
+            return prefixS.CompareTo(other.prefixS);           
         }                                                                        
     }
 }

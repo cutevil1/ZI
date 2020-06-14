@@ -6,22 +6,15 @@ namespace BinarySearchTree
 {
     public class Tree
     {
-        public Node Root { get; set; }
-        public int Count { get; set; }
+		public int Num { get; set; }
+        public Node Uroo { get; set; }
 
-        public void Add(string prefix)
+        public void Add(string pr)
         {
 
-            if (Root == null)
-            {
-                Root = new Node(prefix[0]);
-                Root.Add(prefix);
-            }
-            else
-            {
-                Root.Add(prefix);
-            }
-            Count++;
+            if (Uroo == null) { Uroo = new Node(pr[0]); Uroo.Add(pr); }
+            else { Uroo.Add(pr); }
+            Num++;
         }
     }
 }

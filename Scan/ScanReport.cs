@@ -9,20 +9,19 @@ namespace Scan
 {
     public class ScanReport
     {
-        string path_to_infected_file,
-               virus_name;
-        int total_checked_file
+        string path,
+               name;
+        int check
         {
-            get{return total_checked_file;}
+            get{return check;}
             set {}
         }
-
-        Stopwatch stop_watch = new Stopwatch();
-
+        Stopwatch stop = new Stopwatch();
+		
         public ScanReport()
         {
-            total_checked_file = 0;
-            stop_watch.Start();
+            check = 0;
+            stop.Start();
             try
             {
                 scan_report_list.Clear();
@@ -31,30 +30,28 @@ namespace Scan
         }
 
         public List<ScanReport> scan_report_list = new List<ScanReport>();
-
-        public void Add_record(bool infecded, string path_to_infected_file, string virus_name)
+        public void Add_record(bool inf, string path, string name)
         {
-            if (!infecded)
-                total_checked_file++;
+            if (!inf) check++;
             else
             {
                 scan_report_list.Add(new ScanReport()
                 {
-                    path_to_infected_file = path_to_infected_file,
-                    virus_name = virus_name
+                    path = path,
+                    name = name
                 });
-                total_checked_file++;
+                check++;
             }
         }
 
         public string Get_time_scaning()
         {
-            stop_watch.Stop();
-            TimeSpan ts = stop_watch.Elapsed;
-            string elapsed_time = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            stop.Stop();
+            TimeSpan ts = stop.Elapsed;
+            string timeE = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds / 10);
-            return elapsed_time;
+            return timeE;
         }
     }
 }

@@ -6,12 +6,12 @@ using System.Threading;
 
 namespace SignatureBase
 {
-    public class Work_with_data
+    public class File_work
     {
         public Mutex mutex_wwd = new Mutex(false, "mutex_wwd");
-        public string signature_db_file_name = "SignatureDB.txt", path_to_db_file;
+        public string signature_db_file_name = "SigDB.txt", path_to_db_file;
 
-        public Work_with_data()
+        public File_work()
         {
             path_to_db_file = Path.Combine(Directory.GetCurrentDirectory(), signature_db_file_name);
         }
@@ -44,8 +44,7 @@ namespace SignatureBase
             {
                 mutex_wwd.WaitOne();
                 string line = File.ReadLines(path_to_db_file).ElementAt(number_line);
-
-                return line;
+				return line;
             }
             catch (Exception)
             {

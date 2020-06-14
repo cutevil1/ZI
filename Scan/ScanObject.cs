@@ -9,15 +9,16 @@ namespace Scan
     public class ScanObject
     {
         string file_name, 
-               file_path; 
+               file_path;
+		const int size = 1024;
 
         public IObjectContent content;
-        bool start_scan_object = false, 
-             end_scan_object = false,  
-             start_object_region = false, 
+        bool start_scan_object = false,
+			 start_object_region = false, 
+             end_scan_object = false,
              end_object_region = false; 
         byte[] block;
-        const int blocksize = 1024;
+        
         List<ScanRegion> region_list = new List<ScanRegion> { }; 
 
         ScanObject() { }
@@ -30,39 +31,27 @@ namespace Scan
         public int Block_read()
         {
             
-            int offset = 0;
-            for (int i = 0; i < content.Size_object() / blocksize; i++) 
+            int lim = 0;
+            for (int i = 0; i < content.Size_object() / size; i++) 
             {
-                region_list.Add(new ScanRegion(content, blocksize,offset));
-                offset += blocksize;
+                region_list.Add(new ScanRegion(content, size,lim));
+                lim += size;
             }
             
 
-            int errors = 0;
+            int err = 0;
 
-            Console.WriteLine("Начало файла:");
-            int j = 0;
             foreach(var sc in region_list) 
             {
-                Console.WriteLine("Начало сегмента " + j + ":");
                 if (sc.Block_split()) 
                 {
-                    errors++;
+                    err++;
                     Console.WriteLine("Найдена Сигнатура!");
                 }
-                else 
-                {
-                    Console.WriteLine("Сигнатур не найдено!");
-                }
-                Console.WriteLine("Конец сегмента " + j + ":");
-                j++;
             }
-          
-
-            Console.WriteLine("Конец файла:")
 
 
-            return errors;
+            return err;
         }
 
         public int Size_object()

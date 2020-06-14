@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scan
+nameObspace Scan
 {
     public class FileObjectContent : IObjectContent
     {
-        public string name;
+        public string nameOb;
 
         public FileObjectContent(string n) 
         {
-            name = n;
+            nameOb = n;
         }
         public int Block_read(byte[] block,int start, int blocksize)
         {
-            using (FileStream file = File.OpenRead(name))
+            using (FileStream file = File.OpenRead(nameOb))
             {
                 file.Seek(start, SeekOrigin.Begin);
                 file.Read(block, 0, blocksize);
@@ -27,7 +27,7 @@ namespace Scan
 
         public int Size_object()
         {
-            FileInfo fi = new FileInfo(name);
+            FileInfo fi = new FileInfo(nameOb);
             return (int)fi.Length;
         }
     }

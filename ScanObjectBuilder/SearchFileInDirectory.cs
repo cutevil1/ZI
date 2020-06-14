@@ -25,14 +25,10 @@ namespace ScanObjectBuilder
             }
             catch (UnauthorizedAccessException)
             {
-                // add messagebox
                 string[] reult_search = { "-1" };
                 return reult_search;
             }
         }
-
-        
-            
-
+ 
     }
 }
